@@ -1,11 +1,10 @@
 #include "../include/manager.h"
-#include "../include/config.h"
 
 Kiral::Chuli::Manager* manager;
 
 void setup() {
-  manager = new Kiral::Chuli::Manager(PIN_OUT_AUDIO, TIMER_0);
-  manager->Setup(PIN_IN_SWITCH);
+  manager = new Kiral::Chuli::Manager();
+  manager->Setup();
 }
 
 void loop() {

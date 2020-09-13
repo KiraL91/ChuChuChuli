@@ -1,5 +1,6 @@
 #include "../include/manager.h"
 #include "../assets/sound/sound.h"
+#include "../include/config.h"
 
 namespace Kiral
 {
@@ -7,10 +8,10 @@ namespace Kiral
     {
         bool Manager::play = false;
 
-        Manager::Manager(int speaker, int timer)
+        Manager::Manager()
         {
             WavPlayer = new XT_Wav_Class(Sound);
-            DacAudio = new XT_DAC_Audio_Class(speaker, timer);
+            DacAudio = new XT_DAC_Audio_Class(PIN_OUT_AUDIO, TIMER_0);
         }
         
         Manager::~Manager()
@@ -19,10 +20,10 @@ namespace Kiral
             delete WavPlayer;
         }
 
-        void Manager::Setup(uint8_t button) 
+        void Manager::Setup() 
         {
-            pinMode(button, INPUT);
-            attachInterrupt(button, &Manager::isr, FALLING);
+            pinMode(PIN_IN_SWITCH, INPUT);
+            attachInterrupt(PIN_IN_SWITCH, &Manager::isr, FALLING);
 
             WavPlayer->Speed = 2;
             SetPlay(false);

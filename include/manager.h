@@ -12,17 +12,17 @@ namespace Kiral
         private:
             XT_Wav_Class* WavPlayer;
             XT_DAC_Audio_Class* DacAudio;
-            
+
             static bool play;
 
             static bool GetPlay();
             static void SetPlay(const bool play);
 
         public:
-            Manager(int speaker, int timer);
+            Manager();
             ~Manager();
 
-            void Setup(uint8_t button);
+            void Setup();
             void Run();
             
             static void IRAM_ATTR isr();
