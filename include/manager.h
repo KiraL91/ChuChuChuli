@@ -1,32 +1,31 @@
 #pragma once
 
+#include <Arduino.h>
 #include "../lib/XT_DAC_Audio/XT_DAC_Audio.h"
-#include "../assets/sound/sound.h"
 
 namespace Kiral
 {
-    namespace Chuli {
-        
+    namespace Chuli 
+    {
         class Manager
         {
         private:
+            XT_Wav_Class* WavPlayer;
+            XT_DAC_Audio_Class* DacAudio;
+            
+            static bool play;
 
-            XT_Wav_Class ChuliSound(Sound);
-            XT_DAC_Audio_Class DacAudio(PIN_OUT_AUDIO, TIMER_0);
+            static bool GetPlay();
+            static void SetPlay(const bool play);
 
         public:
-            Manager(/* args */);
+            Manager(int speaker, int timer);
             ~Manager();
-        };
-        
-        Manager::Manager(/* args */)
-        {
-        }
-        
-        Manager::~Manager()
-        {
-        }
-        
 
+            void Setup(uint8_t button);
+            void Run();
+            
+            static void IRAM_ATTR isr();
+        };
     }   
 }
