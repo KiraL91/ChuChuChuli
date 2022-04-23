@@ -1,6 +1,5 @@
 #include "../include/manager.h"
 #include "../assets/sound/sound.h"
-#include "../include/config.h"
 
 namespace Kiral
 {
@@ -10,30 +9,41 @@ namespace Kiral
 
         Manager::Manager()
         {
-            WavPlayer = new XT_Wav_Class(Sound);
-            DacAudio = new XT_DAC_Audio_Class(PIN_OUT_AUDIO, TIMER_0);
+            Initialize();
+        }
+
+        Manager::Manager(const Configuration& conf)
+        {   
+            this->conf = conf;
+            Initialize();
         }
         
-        Manager::~Manager()
-        {
-            delete DacAudio;
-            delete WavPlayer;
+        void Manager::Initialize() {
+            wavPlayer = new XT_Wav_Class(Sound);
+            dacAudio = new XT_DAC_Audio_Class(conf.pin_out_audio, conf.timer_0);
+            Serial.begin(115200);
         }
 
-        void Manager::Setup() 
+        Manager::~Manager()
         {
-            pinMode(PIN_IN_SWITCH, INPUT);
-            attachInterrupt(PIN_IN_SWITCH, &Manager::isr, FALLING);
+            delete dacAudio;
+            delete wavPlayer;
+        }
 
-            WavPlayer->Speed = 2;
+        void Manager::Setup()
+        {
+            pinMode(conf.pin_in_switch, INPUT);
+            attachInterrupt(conf.pin_in_switch, &Manager::isr, FALLING);
+
+            wavPlayer->Speed = conf.speech_speed;
             SetPlay(false);
         }
 
         void Manager::Run() 
         {
-            DacAudio->FillBuffer();
-            if(!WavPlayer->Playing && GetPlay()) {
-                DacAudio->Play(WavPlayer);
+            dacAudio->FillBuffer();
+            if(!wavPlayer->Playing && GetPlay()) {
+                dacAudio->Play(wavPlayer);
                 SetPlay(false);
             }
         }
